@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" styleName="plain">
+  
+  <mx:Script>
+    import mx.utils.URLUtil;
+    import com.jamesward.census2.amf.*;
+    
+    private var startRequestTime:Number;
+    private var startParseTime:Number;
+    private var startRenderTime:Number;
+    
+    private var requestTime:Number;
+    private var parseTime:Number;
+    private var renderTime:Number;
+    
+    private function sendResults():void
+    {
+      //Security.loadPolicyFile("http://localhost:8080/census2/crossdomain.xml");
+      
+      var results:Object = {requestTime: requestTime, parseTime: parseTime, renderTime: renderTime}
+      for (var k:String in results)
+      {
+        var r:URLRequest = new URLRequest(parameters.sendCensusResultURL);
+        var p:URLVariables = new URLVariables();
+        p.clientId = parameters.clientId;
+        p.testId = "flex_amf3";
+        p.resultType = k;
+        p.resultData = results[k];
+        r.data = p;
+        var l:Loader = new Loader();
+        l.load(r);
+      }
+    }
+  </mx:Script>
+
+  <mx:applicationComplete>
+  <![CDATA[
+    var amfURL:String = URLUtil.getProtocol(url) +
+      "://" +
+      URLUtil.getServerNameWithPort(url) +
+      "/census2-tests/servlet/CensusServiceServlet?command=getAMF3" + 
+      "&rows=" + parameters.numRows +
+      "&clientId=" + parameters.clientId +
+      "&sendCensusResultURL=" + parameters.sendCensusResultURL;
+        
+    if (new Boolean(parameters.enableGZip))
+    {
+      amfURL += "&gzip=true";
+    }
+
+    var urlReq:URLRequest = new URLRequest(amfURL);
+
+    var loader:URLLoader = new URLLoader();
+    
+    loader.dataFormat = URLLoaderDataFormat.BINARY;
+    
+    loader.addEventListener(Event.COMPLETE, function(event:Event):void {
+	    var now:Number = new Date().time;
+	    requestTime = now - startRequestTime;
+
+      startParseTime = new Date().time;
+      var ba:ByteArray = (event.currentTarget.data as ByteArray);      
+      var packet:AMFPacket = AMFDecoder.decodeResponse(ba);
+      parseTime = new Date().time - startParseTime;
+      
+      renderTime = 0;
+      startRenderTime = (new Date()).time;
+	    dg.dataProvider = packet.messages[0].body;
+	  });
+	  
+    startRequestTime = (new Date()).time;
+	  loader.load(urlReq);
+  ]]>
+  </mx:applicationComplete>
+
+  <mx:DataGrid id="dg" width="100%" height="100%">
+    <mx:updateComplete>
+      var now:Number = new Date().time;
+      
+      if (renderTime == 0)
+      {
+        renderTime = now - startRenderTime;
+        
+        sendResults();
+      }
+    </mx:updateComplete>
+    <mx:columns>
+      <mx:DataGridColumn dataField="id"/>
+      <mx:DataGridColumn dataField="age"/>
+      <mx:DataGridColumn dataField="classOfWorker"/>
+      <mx:DataGridColumn dataField="education"/>
+      <mx:DataGridColumn dataField="maritalStatus"/>
+      <mx:DataGridColumn dataField="race"/>
+      <mx:DataGridColumn dataField="sex"/>
+    </mx:columns>
+  </mx:DataGrid>
+  
+</mx:Application>

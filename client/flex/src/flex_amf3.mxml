@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" styleName="plain">
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" styleName="plain" name="flex_amf3">
   
   <mx:Script>
     import mx.utils.URLUtil;
@@ -15,19 +15,17 @@
     
     private function sendResults():void
     {
-      //Security.loadPolicyFile("http://localhost:8080/census2/crossdomain.xml");
-      
       var results:Object = {requestTime: requestTime, parseTime: parseTime, renderTime: renderTime}
       for (var k:String in results)
       {
         var r:URLRequest = new URLRequest(parameters.sendCensusResultURL);
         var p:URLVariables = new URLVariables();
         p.clientId = parameters.clientId;
-        p.testId = "flex_amf3";
+        p.testId = name;
         p.resultType = k;
         p.resultData = results[k];
         r.data = p;
-        var l:Loader = new Loader();
+        var l:URLLoader = new URLLoader();
         l.load(r);
       }
     }
@@ -41,6 +39,7 @@
       "/census2-tests/servlet/CensusServiceServlet?command=getAMF3" + 
       "&rows=" + parameters.numRows +
       "&clientId=" + parameters.clientId +
+      "&testId=" + name +
       "&sendCensusResultURL=" + parameters.sendCensusResultURL;
         
     if (new Boolean(parameters.enableGZip))

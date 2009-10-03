@@ -20,7 +20,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 package com.jamesward.census2;
 
 import java.io.IOException;
+import java.net.URI;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -28,6 +31,15 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIUtils;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
 
 import net.sf.json.JSONArray;
 import flex.messaging.io.MessageIOConstants;
@@ -41,7 +53,7 @@ public class CensusServiceServlet extends HttpServlet
 {
 
   private static final long serialVersionUID = 6356748329799174984L;
-
+  
   public void init(ServletConfig config) throws ServletException
   {
     super.init(config);
@@ -85,12 +97,16 @@ public class CensusServiceServlet extends HttpServlet
       rows = Integer.parseInt(request.getParameter("rows"));
     }
     
+    String sendCensusResultURL = request.getParameter("sendCensusResultURL");
+    String clientId = request.getParameter("clientId");
+    String testId = request.getParameter("testId");
+    
     long startTime = System.currentTimeMillis();
 
     CensusService srv = new CensusService();
     CensusEntryVO[] list = srv.getElements(0, rows);
     
-    System.out.println("getting the data took " + (System.currentTimeMillis() - startTime) + "ms");
+    sendResult(sendCensusResultURL, clientId, testId, "dataFetchTime", (System.currentTimeMillis() - startTime));
     
     startTime = System.currentTimeMillis();
 
@@ -115,7 +131,7 @@ public class CensusServiceServlet extends HttpServlet
       throw new ServletException("command not set correctly!");
     }
     
-    System.out.println("serializing the data took " + (System.currentTimeMillis() - startTime) + "ms");
+    sendResult(sendCensusResultURL, clientId, testId, "serializationTime", (System.currentTimeMillis() - startTime));
   }
 
   private void outputHTML(CensusEntryVO[] list, HttpServletResponse response) throws IOException
@@ -188,6 +204,22 @@ public class CensusServiceServlet extends HttpServlet
     amfMessageSerializer.writeMessage(requestMessage);
     
     out.close();
+  }
+  
+  private void sendResult(String sendCensusResultURL, String clientId, String testId, String resultType, long resultData) throws ClientProtocolException, IOException
+  {
+    DefaultHttpClient httpclient = new DefaultHttpClient();
+    
+    List<NameValuePair> qparams = new ArrayList<NameValuePair>();
+    qparams.add(new BasicNameValuePair("clientId", clientId));
+    qparams.add(new BasicNameValuePair("testId", testId));
+    qparams.add(new BasicNameValuePair("resultType", resultType));
+    qparams.add(new BasicNameValuePair("resultData", (new Long(resultData)).toString()));
+
+    HttpGet httpget = new HttpGet(sendCensusResultURL + "?" + URLEncodedUtils.format(qparams, "UTF-8"));
+    
+    httpclient.execute(httpget);
+    httpclient.getConnectionManager().shutdown();
   }
 
 }

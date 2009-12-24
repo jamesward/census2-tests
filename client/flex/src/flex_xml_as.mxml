@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2007 James Ward
+http://www.jamesward.org
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-->
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" styleName="plain" name="flex_xml_as">
+
+  <mx:Script>
+    import mx.rpc.xml.SimpleXMLDecoder;
+    import mx.utils.URLUtil;
+    
+    private var startRequestTime:Number;
+    private var startParseTime:Number;
+    private var startRenderTime:Number;
+    
+    private var requestTime:Number;
+    private var parseTime:Number;
+    private var renderTime:Number;
+    
+    private var enableGZip:Boolean = false;
+    
+    private function sendResults():void
+    {
+      var results:Object = {requestTime: requestTime, parseTime: parseTime, renderTime: renderTime, memorySize: System.totalMemory, enableGZip: enableGZip};
+      for (var k:String in results)
+      {
+        var r:URLRequest = new URLRequest(parameters.sendCensusResultURL);
+        var p:URLVariables = new URLVariables();
+        p.clientId = parameters.clientId;
+        p.testId = name;
+        p.resultType = k;
+        p.resultData = results[k];
+        r.data = p;
+        var l:URLLoader = new URLLoader();
+        l.load(r);
+      }
+    }
+  </mx:Script>
+  
+  <mx:applicationComplete>
+  <![CDATA[
+    var xmlURL:String = URLUtil.getProtocol(url) +
+      "://" +
+      URLUtil.getServerNameWithPort(url) +
+      "/census2-tests/servlet/CensusServiceServlet?command=getXML" + 
+      "&rows=" + parameters.numRows +
+      "&clientId=" + parameters.clientId +
+      "&testId=" + name +
+      "&sendCensusResultURL=" + parameters.sendCensusResultURL;
+
+    if ((parameters.enableGZip == null) || (parameters.enableGZip != "false")) // parameters are always strings = lame
+    {
+      enableGZip = true;
+      xmlURL += "&gzip=true";
+    }
+    
+    srv.url = xmlURL;
+	  
+    startRequestTime = (new Date()).time;
+	  srv.send();
+  ]]>
+  </mx:applicationComplete>
+
+  <mx:HTTPService id="srv" resultFormat="text">
+    <mx:result>
+      var now:Number = new Date().time;
+	    requestTime = now - startRequestTime;
+	    
+	    startParseTime = new Date().time;
+	    var xn:XMLNode = XMLNode(new XMLDocument(event.result.toString()));
+      var resultData:Object = (new SimpleXMLDecoder(true)).decodeXML(xn);
+	    parseTime = new Date().time - startParseTime;
+      
+      renderTime = 0;
+      startRenderTime = (new Date()).time;
+	    dg.dataProvider = resultData.list.item;
+    </mx:result>
+  </mx:HTTPService>
+
+  <mx:DataGrid id="dg" width="100%" height="100%">
+    <mx:updateComplete>
+      var now:Number = new Date().time;
+      
+      if (renderTime == 0)
+      {
+        renderTime = now - startRenderTime;
+        
+        sendResults();
+      }
+    </mx:updateComplete>
+    <mx:columns>
+      <mx:DataGridColumn dataField="itemId"/>
+      <mx:DataGridColumn dataField="age"/>
+      <mx:DataGridColumn dataField="classOfWorker"/>
+      <mx:DataGridColumn dataField="education"/>
+      <mx:DataGridColumn dataField="maritalStatus"/>
+      <mx:DataGridColumn dataField="race"/>
+      <mx:DataGridColumn dataField="sex"/>
+    </mx:columns>
+  </mx:DataGrid>
+
+</mx:Application>

@@ -44,7 +44,7 @@ public class GZIPResponseWrapper extends HttpServletResponseWrapper {
         }
       }
     } catch (IOException e) {
-      log.info("finishResponse", e);
+      log.debug("finishResponse", e);
     }
   }
 

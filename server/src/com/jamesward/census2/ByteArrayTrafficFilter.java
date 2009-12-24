@@ -20,8 +20,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 package com.jamesward.census2;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Hashtable;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -29,13 +27,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import flex.messaging.MessageBroker;
-import flex.messaging.messages.AsyncMessage;
-import flex.messaging.util.UUIDUtils;
 
 
 public class ByteArrayTrafficFilter implements Filter
@@ -46,7 +38,7 @@ public class ByteArrayTrafficFilter implements Filter
   public void doFilter(ServletRequest request, ServletResponse response,
     FilterChain chain) throws IOException, ServletException
   {
-    Calendar startTime = Calendar.getInstance();
+    long startTime = System.currentTimeMillis();
 
     int contentLength;
     long execTime;
@@ -57,7 +49,7 @@ public class ByteArrayTrafficFilter implements Filter
         (HttpServletResponse) response); 
       chain.doFilter(request, wrapper);
       contentLength = wrapper.getOutputAsByteArray().length;
-      execTime = Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis();
+      execTime = System.currentTimeMillis() - startTime;
       response.getOutputStream().write(wrapper.getOutputAsByteArray());
     }
     catch (Exception e)
@@ -70,66 +62,12 @@ public class ByteArrayTrafficFilter implements Filter
 
     try
     {
-      // send the time it took to the right place
-      /*
+      String sendCensusResultURL = request.getParameter("sendCensusResultURL");
+      String clientId = request.getParameter("clientId");
+      String testId = request.getParameter("testId");
       
-      String id = request.getParameter("id");
-      if (id == null)
-      {
-        String referer = ((HttpServletRequest)request).getHeader("referer");
-        if (referer != null && referer.indexOf("DYNAMIC") == -1) // filter out polling requests
-        {
-          System.out.println("referer = " + referer);
-          id = referer.substring(referer.lastIndexOf("/")+1, referer.length() - 4);
-          System.out.println("id = " + id);
-          if (id.indexOf(".") > -1)
-          {
-            id = id.substring(0, id.indexOf("."));
-          }
-        }
-      }
-    
-      System.out.println("id = " + id);
-      System.out.println("contentLength = " + contentLength);
-      System.out.println("execTime = " + execTime);
-
-      if ((id != null) && (!id.equals("index")))
-      {
-        Hashtable<String, Object> body = new Hashtable<String, Object>();
-        body.put("id", id);
-        body.put("contentLength", contentLength);
-        body.put("execTime", execTime);
-
-        AsyncMessage msg = new AsyncMessage();
-
-        String clientId = UUIDUtils.createUUID(false);
-        //System.out.println("clientId = " + clientId);
-        msg.setClientId(clientId);
-
-        String messageId = UUIDUtils.createUUID(false);
-        //System.out.println("messageId = " + messageId);
-        msg.setMessageId(messageId);
-
-        String sessionId = session.getId();
-        //System.out.println("sessionId = " + sessionId);
-        msg.setHeader(AsyncMessage.SUBTOPIC_HEADER_NAME, sessionId);
-
-        msg.setDestination("accessLogDestination");
-        msg.setTimestamp(System.currentTimeMillis());
-        msg.setBody(body);
-
-        //System.out.println("getting the message broker");
-
-        MessageBroker mb = MessageBroker.getMessageBroker(null);
-
-        //System.out.println("got the message broker, sending message");
-
-        mb.routeMessageToService(msg, null);
-
-        //System.out.println("message sent");
-         
-      }
-       */
+      SendCensusResult.sendResult(sendCensusResultURL, clientId, testId, "totalServerTime", execTime);
+      SendCensusResult.sendResult(sendCensusResultURL, clientId, testId, "contentLength", contentLength);
     }
     catch (Exception e)
     {

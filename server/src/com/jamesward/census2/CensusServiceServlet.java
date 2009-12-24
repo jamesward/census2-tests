@@ -20,10 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 package com.jamesward.census2;
 
 import java.io.IOException;
-import java.net.URI;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -31,15 +28,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIUtils;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
 
 import net.sf.json.JSONArray;
 import flex.messaging.io.MessageIOConstants;
@@ -106,7 +94,7 @@ public class CensusServiceServlet extends HttpServlet
     CensusService srv = new CensusService();
     CensusEntryVO[] list = srv.getElements(0, rows);
     
-    sendResult(sendCensusResultURL, clientId, testId, "dataFetchTime", (System.currentTimeMillis() - startTime));
+    SendCensusResult.sendResult(sendCensusResultURL, clientId, testId, "dataFetchTime", (System.currentTimeMillis() - startTime));
     
     startTime = System.currentTimeMillis();
 
@@ -131,7 +119,7 @@ public class CensusServiceServlet extends HttpServlet
       throw new ServletException("command not set correctly!");
     }
     
-    sendResult(sendCensusResultURL, clientId, testId, "serializationTime", (System.currentTimeMillis() - startTime));
+    SendCensusResult.sendResult(sendCensusResultURL, clientId, testId, "serializationTime", (System.currentTimeMillis() - startTime));
   }
 
   private void outputHTML(CensusEntryVO[] list, HttpServletResponse response) throws IOException
@@ -204,22 +192,6 @@ public class CensusServiceServlet extends HttpServlet
     amfMessageSerializer.writeMessage(requestMessage);
     
     out.close();
-  }
-  
-  private void sendResult(String sendCensusResultURL, String clientId, String testId, String resultType, long resultData) throws ClientProtocolException, IOException
-  {
-    DefaultHttpClient httpclient = new DefaultHttpClient();
-    
-    List<NameValuePair> qparams = new ArrayList<NameValuePair>();
-    qparams.add(new BasicNameValuePair("clientId", clientId));
-    qparams.add(new BasicNameValuePair("testId", testId));
-    qparams.add(new BasicNameValuePair("resultType", resultType));
-    qparams.add(new BasicNameValuePair("resultData", (new Long(resultData)).toString()));
-
-    HttpGet httpget = new HttpGet(sendCensusResultURL + "?" + URLEncodedUtils.format(qparams, "UTF-8"));
-    
-    httpclient.execute(httpget);
-    httpclient.getConnectionManager().shutdown();
   }
 
 }

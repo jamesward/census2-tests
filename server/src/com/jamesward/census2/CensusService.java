@@ -21,8 +21,15 @@ package com.jamesward.census2;
 
 import java.sql.SQLException;
 
+import javax.jws.WebMethod;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
+
+@WebService
+@SOAPBinding(style = SOAPBinding.Style.RPC)
 public class CensusService implements ICensusService
 {
+    @WebMethod
     public CensusEntryVO[] getElements(int begin, int count)
     {
         CensusDAO dao = new CensusDAO();

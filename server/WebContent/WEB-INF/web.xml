@@ -24,7 +24,17 @@
         <url-pattern>/servlet/CensusServiceServlet</url-pattern>
     </filter-mapping>
 
+    <filter-mapping>
+        <filter-name>Byte Array Traffic Filter</filter-name>
+        <url-pattern>/services/CensusSOAPService</url-pattern>
+    </filter-mapping>
 
+    <filter-mapping>
+        <filter-name>GZIP Filter</filter-name>
+        <url-pattern>/services/CensusSOAPService</url-pattern>
+    </filter-mapping>
+    
+    
     <servlet>
         <servlet-name>Census Service Servlet</servlet-name>
         <display-name>Census Service Servlet</display-name>
@@ -32,10 +42,20 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+		<servlet>
+      <servlet-name>CensusSOAPService</servlet-name>
+      <servlet-class>com.jamesward.census2.CensusService</servlet-class>
+    </servlet>
+
 
     <servlet-mapping>
         <servlet-name>Census Service Servlet</servlet-name>
         <url-pattern>/servlet/CensusServiceServlet</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+      <servlet-name>CensusSOAPService</servlet-name>
+      <url-pattern>/services/CensusSOAPService</url-pattern>
     </servlet-mapping>
 
 </web-app>

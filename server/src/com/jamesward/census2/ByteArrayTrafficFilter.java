@@ -60,19 +60,22 @@ public class ByteArrayTrafficFilter implements Filter
     {
     }
 
-    try
+    if (request.getParameter("wsdl") == null)
     {
-      String sendCensusResultURL = request.getParameter("sendCensusResultURL");
-      String clientId = request.getParameter("clientId");
-      String testId = request.getParameter("testId");
-      
-      SendCensusResult.sendResult(sendCensusResultURL, clientId, testId, "totalServerTime", execTime);
-      SendCensusResult.sendResult(sendCensusResultURL, clientId, testId, "contentLength", contentLength);
-    }
-    catch (Exception e)
-    {
-      System.out.println("Error: " + e.getMessage());
-      e.printStackTrace();
+      try
+      {
+        String sendCensusResultURL = request.getParameter("sendCensusResultURL");
+        String clientId = request.getParameter("clientId");
+        String testId = request.getParameter("testId");
+        
+        SendCensusResult.sendResult(sendCensusResultURL, clientId, testId, "totalServerTime", execTime);
+        SendCensusResult.sendResult(sendCensusResultURL, clientId, testId, "contentLength", contentLength);
+      }
+      catch (Exception e)
+      {
+        System.out.println("Error: " + e.getMessage());
+        e.printStackTrace();
+      }
     }
 
   }

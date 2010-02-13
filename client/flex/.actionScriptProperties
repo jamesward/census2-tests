@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <actionScriptProperties mainApplicationPath="flex_xml_as.mxml" version="3">
-  <compiler additionalCompilerArguments="-locale en_US -default-background-color=#eaeaea -compiler.optimize=false -verbose-stacktraces=true -debug=true" copyDependentFiles="true" enableModuleDebug="true" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="false" htmlPlayerVersion="9.0.28" htmlPlayerVersionCheck="false" outputFolderLocation="/home/jamesw/projects/census2-tests/server/WebContent" outputFolderPath="bin-debug" rootURL="http://localhost:8080/census2-tests/flex_amf3.html?numRows=5000" sourceFolderPath="src" strict="true" useApolloConfig="false" verifyDigests="true" warn="true">
+  <compiler additionalCompilerArguments="-locale en_US -default-background-color=#eaeaea -compiler.optimize=false -verbose-stacktraces=true -debug=true" copyDependentFiles="true" enableModuleDebug="true" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="false" htmlPlayerVersion="9.0.28" htmlPlayerVersionCheck="false" outputFolderLocation="/home/jamesw/projects/census2-tests/server/WebContent" outputFolderPath="bin-debug" rootURL="http://localhost:8080/census2-tests/flex_soap_as.html?clientId=E5475ACD-C2D0-FB0B-022F-C4F807DDC4ED&amp;numRows=500&amp;enableGZip=true" sourceFolderPath="src" strict="true" useApolloConfig="false" verifyDigests="true" warn="true">
     <compilerSourcePath/>
     <libraryPath defaultLinkType="3">
       <libraryPathEntry kind="3" linkType="2" path="${PROJECT_FRAMEWORKS}/libs/player/9/playerglobal.swc" useDefaultLinkType="false"/>
@@ -23,6 +23,7 @@
   </compiler>
   <applications>
     <application path="flex_xml_as.mxml"/>
+    <application path="flex_soap_as.mxml"/>
     <application path="flex_amf3.mxml"/>
   </applications>
   <modules/>

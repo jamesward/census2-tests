@@ -9,7 +9,7 @@
         <channel ref="my-amf"/>
     </default-channels>
     
-    <destination id="census-ro">
+    <destination id="census">
         <properties>
             <source>com.jamesward.census2.CensusService</source>
         </properties>

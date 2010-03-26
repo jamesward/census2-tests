@@ -2,13 +2,13 @@ html, body {
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: 11px;
     margin: 0px;
-    background-color: #1a1a1a;
+    background-color: #eaeaea;
     overflow: hidden;
 }
 
 td {
     font-family: Verdana, Arial, Helvetica, sans-serif;
-    color: #bbbbbb;
+    color: #444444;
     font-size: 11px;
 }
 
@@ -19,13 +19,13 @@ th {
 
 h1 {
     font-family: Verdana, Arial, Helvetica, sans-serif;
-    color: #bbbbbb;
+    color: #444444;
     font-size: 14px;
 }
 
 h2 {
     font-family: Verdana, Arial, Helvetica, sans-serif;
-    color: #bbbbbb;
+    color: #444444;
     font-size: 12px;
 }
 

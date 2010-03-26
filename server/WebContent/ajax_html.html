@@ -99,6 +99,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 	{
 		var r = "<iframe src='" + qs.get("sendCensusResultURL") +
 		  "?clientId=" + qs.get("clientId") + "&testId=" + testId + "&resultType=" + resultType + "&resultData=" + resultData +
+		  "&gzip=" + gzip + "&numRows=" + numRows + 
 		  "'></iframe>";
 			
 		document.getElementById("results").innerHTML = r;
@@ -108,7 +109,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
   {
 		sendResult("parseTime", 0);
 		sendResult("memorySize", 0);
-		sendResult("enableGZip", gzip);
 		
 	  
     endLoadTime = new Date();
@@ -120,17 +120,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
     sendResult("renderTime", (endLoadTime.getTime() - startLoadTime.getTime()));
 
-    document.getElementById("results").innerHTML = "";
+    setTimeout("document.getElementById('results').innerHTML = '';",200);
   }
 
   function listMouseOver(row)
   {
-    row.style.backgroundColor= "#363636";
+    row.style.backgroundColor= "#c9c9c9";
   }
 
   function listMouseOut(row)
   {
-    row.style.backgroundColor= "#1a1a1a";
+    row.style.backgroundColor= "#eaeaea";
   }
 
 -->

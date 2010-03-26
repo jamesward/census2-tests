@@ -60,6 +60,7 @@ public class ByteArrayTrafficFilter implements Filter
     {
     }
 
+    // do not do this when the request is for a wsdl
     if (request.getParameter("wsdl") == null)
     {
       try
@@ -67,9 +68,18 @@ public class ByteArrayTrafficFilter implements Filter
         String sendCensusResultURL = request.getParameter("sendCensusResultURL");
         String clientId = request.getParameter("clientId");
         String testId = request.getParameter("testId");
+        Boolean gzip = false;
         
-        SendCensusResult.sendResult(sendCensusResultURL, clientId, testId, "totalServerTime", execTime);
-        SendCensusResult.sendResult(sendCensusResultURL, clientId, testId, "contentLength", contentLength);
+        if ((request.getParameter("gzip") != null) && (request.getParameter("gzip").equals("true")))
+        {
+          gzip = true;
+        }
+        
+        Integer numRows = Integer.parseInt(request.getParameter("rows"));
+        
+        
+        SendCensusResult.sendResult(sendCensusResultURL, clientId, testId, "totalServerTime", execTime, gzip, numRows);
+        SendCensusResult.sendResult(sendCensusResultURL, clientId, testId, "contentLength", contentLength, gzip, numRows);
       }
       catch (Exception e)
       {

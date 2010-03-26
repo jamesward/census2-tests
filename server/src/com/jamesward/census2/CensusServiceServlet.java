@@ -88,13 +88,19 @@ public class CensusServiceServlet extends HttpServlet
     String sendCensusResultURL = request.getParameter("sendCensusResultURL");
     String clientId = request.getParameter("clientId");
     String testId = request.getParameter("testId");
+    Boolean gzip = false;
+    
+    if ((request.getParameter("gzip") != null) && (request.getParameter("gzip").equals("true")))
+    {
+      gzip = true;
+    }
     
     long startTime = System.currentTimeMillis();
 
     CensusService srv = new CensusService();
     CensusEntryVO[] list = srv.getElements(0, rows);
     
-    SendCensusResult.sendResult(sendCensusResultURL, clientId, testId, "dataFetchTime", (System.currentTimeMillis() - startTime));
+    SendCensusResult.sendResult(sendCensusResultURL, clientId, testId, "dataFetchTime", (System.currentTimeMillis() - startTime), gzip, rows);
     
     startTime = System.currentTimeMillis();
 
@@ -119,7 +125,7 @@ public class CensusServiceServlet extends HttpServlet
       throw new ServletException("command not set correctly!");
     }
     
-    SendCensusResult.sendResult(sendCensusResultURL, clientId, testId, "serializationTime", (System.currentTimeMillis() - startTime));
+    SendCensusResult.sendResult(sendCensusResultURL, clientId, testId, "serializationTime", (System.currentTimeMillis() - startTime), gzip, rows);
   }
 
   private void outputHTML(CensusEntryVO[] list, HttpServletResponse response) throws IOException

@@ -36,7 +36,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
     
     private function sendResults():void
     {
-      var results:Object = {requestTime: requestTime, parseTime: parseTime, renderTime: renderTime, memorySize: System.totalMemory, enableGZip: enableGZip};
+      var results:Object = {requestTime: requestTime, parseTime: parseTime, renderTime: renderTime, memorySize: System.totalMemory};
       for (var k:String in results)
       {
         var r:URLRequest = new URLRequest(parameters.sendCensusResultURL);
@@ -45,6 +45,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
         p.testId = name;
         p.resultType = k;
         p.resultData = results[k];
+        p.gzip = enableGZip;
+        p.numRows = parameters.numRows;
         r.data = p;
         var l:URLLoader = new URLLoader();
         l.load(r);

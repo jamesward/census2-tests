@@ -39,7 +39,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
     
     private function sendResults():void
     {
-      var results:Object = {requestTime: requestTime, parseTime: parseTime, renderTime: renderTime, memorySize: System.totalMemory, enableGZip: enableGZip};
+      var results:Object = {requestTime: requestTime, parseTime: parseTime, renderTime: renderTime, memorySize: System.totalMemory};
       for (var k:String in results)
       {
         var r:URLRequest = new URLRequest(parameters.sendCensusResultURL);
@@ -48,6 +48,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
         p.testId = name;
         p.resultType = k;
         p.resultData = results[k];
+        p.gzip = enableGZip;
+        p.numRows = parameters.numRows;
         r.data = p;
         var l:URLLoader = new URLLoader();
         l.load(r);
@@ -58,21 +60,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
   
   <mx:applicationComplete>
   <![CDATA[
-    var endpointURI:String = URLUtil.getProtocol(url) +
-      "://" +
-      URLUtil.getServerNameWithPort(url) +
-      "/census2-tests/services/CensusSOAPService?" + 
-      "clientId=" + parameters.clientId +
-      "&testId=" + name +
-      "&sendCensusResultURL=" + parameters.sendCensusResultURL;    
-  
     if ((parameters.enableGZip == null) || (parameters.enableGZip != "false")) // parameters are always strings = lame
     {
       enableGZip = true;
-      endpointURI += "&gzip=true";
     }
-
-    srv.endpointURI = endpointURI;
 	  
     startRequestTime = (new Date()).time;
 	  srv.getElements.send(0, parameters.numRows);
@@ -81,11 +72,21 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
   <mx:WebService id="srv" wsdl="services/CensusSOAPService?wsdl" load="handleLoad()" result="parseDone()">
     <mx:load>
+    <![CDATA[
+      // fix the soap endpoint url to include all the request data we need
+      srv.endpointURI += "?clientId=" + parameters.clientId +
+        "&testId=" + name +
+        "&sendCensusResultURL=" + parameters.sendCensusResultURL +
+        "&gzip=" +enableGZip +
+        "&rows="+parameters.numRows;
+
       srv.getElements.asyncRequest.addEventListener('acknowledge', function(event:Event):void {
+        
         var now:Number = new Date().time;
         requestTime = (now - startRequestTime);
         startParseTime = (new Date()).time;
       });
+    ]]>
     </mx:load>
     <mx:result>
       var now:Number = new Date().time;

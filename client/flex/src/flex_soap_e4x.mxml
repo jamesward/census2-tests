@@ -17,11 +17,15 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 -->
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" styleName="plain" name="flex_xml_as">
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" styleName="plain" name="flex_soap_e4x">
 
   <mx:Script>
-    import mx.rpc.xml.SimpleXMLDecoder;
+  <![CDATA[
     import mx.utils.URLUtil;
+
+    import mx.core.mx_internal;
+
+    use namespace mx_internal;  
     
     private var startRequestTime:Number;
     private var startParseTime:Number;
@@ -51,47 +55,48 @@ with this program; if not, write to the Free Software Foundation, Inc.,
         l.load(r);
       }
     }
+  ]]>
   </mx:Script>
   
   <mx:applicationComplete>
   <![CDATA[
-    var xmlURL:String = URLUtil.getProtocol(url) +
-      "://" +
-      URLUtil.getServerNameWithPort(url) +
-      "/census2-tests/servlet/CensusServiceServlet?command=getXML" + 
-      "&rows=" + parameters.numRows +
-      "&clientId=" + parameters.clientId +
-      "&testId=" + name +
-      "&sendCensusResultURL=" + parameters.sendCensusResultURL;
-
     if ((parameters.enableGZip == null) || (parameters.enableGZip != "false")) // parameters are always strings = lame
     {
       enableGZip = true;
-      xmlURL += "&gzip=true";
     }
-    
-    srv.url = xmlURL;
 	  
     startRequestTime = (new Date()).time;
-	  srv.send();
+	  srv.getElements.send(0, parameters.numRows);
   ]]>
   </mx:applicationComplete>
 
-  <mx:HTTPService id="srv" resultFormat="text">
+  <mx:WebService id="srv" wsdl="services/CensusSOAPService?wsdl" load="handleLoad()" result="parseDone()">
+    <mx:load>
+    <![CDATA[
+      // fix the soap endpoint url to include all the request data we need
+      srv.endpointURI += "?clientId=" + parameters.clientId +
+        "&testId=" + name +
+        "&sendCensusResultURL=" + parameters.sendCensusResultURL +
+        "&gzip=" +enableGZip +
+        "&rows="+parameters.numRows;
+        
+      srv.getElements.asyncRequest.addEventListener('acknowledge', function(event:Event):void {
+        var now:Number = new Date().time;
+        requestTime = (now - startRequestTime);
+        startParseTime = (new Date()).time;
+      });
+    ]]>
+    </mx:load>
     <mx:result>
       var now:Number = new Date().time;
-	    requestTime = now - startRequestTime;
-	    
-	    startParseTime = new Date().time;
-	    var xn:XMLNode = XMLNode(new XMLDocument(event.result.toString()));
-      var resultData:Object = (new SimpleXMLDecoder(true)).decodeXML(xn);
-	    parseTime = new Date().time - startParseTime;
+      parseTime = (now - startParseTime);
       
       renderTime = 0;
       startRenderTime = (new Date()).time;
-	    dg.dataProvider = resultData.list.item;
+      dg.dataProvider = srv.getElements.lastResult..item;
     </mx:result>
-  </mx:HTTPService>
+    <mx:operation name="getElements" resultFormat="e4x"/>
+  </mx:WebService>
 
   <mx:DataGrid id="dg" width="100%" height="100%">
     <mx:updateComplete>
@@ -105,7 +110,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
       }
     </mx:updateComplete>
     <mx:columns>
-      <mx:DataGridColumn dataField="itemId"/>
+      <mx:DataGridColumn dataField="id"/>
       <mx:DataGridColumn dataField="age"/>
       <mx:DataGridColumn dataField="classOfWorker"/>
       <mx:DataGridColumn dataField="education"/>

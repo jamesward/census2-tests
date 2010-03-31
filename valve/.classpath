@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/home/jamesw/jboss-5.1.0.GA/server/census2/deploy/jbossweb.sar/jbossweb.jar"/>
+	<classpathentry kind="lib" path="/home/jamesw/jboss-5.1.0.GA/common/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="/home/jamesw/jboss-5.1.0.GA/server/census2/deploy/jbossweb.sar/apache-mime4j-0.6.jar"/>
+	<classpathentry kind="lib" path="/home/jamesw/jboss-5.1.0.GA/server/census2/deploy/jbossweb.sar/httpclient-4.0.jar"/>
+	<classpathentry kind="lib" path="/home/jamesw/jboss-5.1.0.GA/server/census2/deploy/jbossweb.sar/httpcore-4.0.1.jar"/>
+	<classpathentry kind="lib" path="/home/jamesw/jboss-5.1.0.GA/server/census2/deploy/jbossweb.sar/httpmime-4.0.jar"/>
+	<classpathentry kind="output" path="build"/>
+</classpath>

@@ -3,37 +3,6 @@
 <web-app>
     <display-name>Census2 Tests</display-name>
     
-    <filter>
-        <filter-name>Byte Array Traffic Filter</filter-name>
-        <filter-class>com.jamesward.census2.ByteArrayTrafficFilter</filter-class>
-    </filter>
-
-    <filter>
-        <filter-name>GZIP Filter</filter-name>
-        <filter-class>com.jamesward.census2.GZIPFilter</filter-class>
-    </filter>
-
-
-    <filter-mapping>
-        <filter-name>Byte Array Traffic Filter</filter-name>
-        <url-pattern>/servlet/CensusServiceServlet</url-pattern>
-    </filter-mapping>
-
-    <filter-mapping>
-        <filter-name>GZIP Filter</filter-name>
-        <url-pattern>/servlet/CensusServiceServlet</url-pattern>
-    </filter-mapping>
-
-    <filter-mapping>
-        <filter-name>Byte Array Traffic Filter</filter-name>
-        <url-pattern>/services/CensusSOAPService</url-pattern>
-    </filter-mapping>
-
-    <filter-mapping>
-        <filter-name>GZIP Filter</filter-name>
-        <url-pattern>/services/CensusSOAPService</url-pattern>
-    </filter-mapping>
-    
     <servlet>
 	    <servlet-name>MessageBrokerServlet</servlet-name>
 	    <display-name>MessageBrokerServlet</display-name>

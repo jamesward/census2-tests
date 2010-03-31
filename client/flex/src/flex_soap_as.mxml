@@ -77,8 +77,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
       srv.endpointURI += "?clientId=" + parameters.clientId +
         "&testId=" + name +
         "&sendCensusResultURL=" + parameters.sendCensusResultURL +
-        "&gzip=" +enableGZip +
-        "&rows="+parameters.numRows;
+        "&rows=" + parameters.numRows;
+      
+      if (enableGZip)
+      {
+        srv.endpointURI += "&gzip=true";
+      }
 
       srv.getElements.asyncRequest.addEventListener('acknowledge', function(event:Event):void {
         

@@ -100,7 +100,7 @@ public class CensusServiceServlet extends HttpServlet
     CensusService srv = new CensusService();
     CensusEntryVO[] list = srv.getElements(0, rows);
     
-    SendCensusResult.sendResult(sendCensusResultURL, clientId, testId, "dataFetchTime", (System.currentTimeMillis() - startTime), gzip, rows);
+    //SendCensusResult.sendResult(sendCensusResultURL, clientId, testId, "dataFetchTime", (System.currentTimeMillis() - startTime), gzip, rows);
     
     startTime = System.currentTimeMillis();
 
@@ -125,7 +125,7 @@ public class CensusServiceServlet extends HttpServlet
       throw new ServletException("command not set correctly!");
     }
     
-    SendCensusResult.sendResult(sendCensusResultURL, clientId, testId, "serializationTime", (System.currentTimeMillis() - startTime), gzip, rows);
+    //SendCensusResult.sendResult(sendCensusResultURL, clientId, testId, "serializationTime", (System.currentTimeMillis() - startTime), gzip, rows);
   }
 
   private void outputHTML(CensusEntryVO[] list, HttpServletResponse response) throws IOException

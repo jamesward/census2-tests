@@ -20,10 +20,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" styleName="plain" name="flex_amf3">
   
   <mx:Script>
-    import mx.controls.Alert;
-  
-    import mx.utils.URLUtil;
     import com.jamesward.census2.amf.*;
+    
+    import mx.controls.Alert;
+    import mx.utils.URLUtil;
     
     private var startRequestTime:Number;
     private var startParseTime:Number;
@@ -63,7 +63,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
       "&rows=" + parameters.numRows +
       "&clientId=" + parameters.clientId +
       "&testId=" + name +
-      "&sendCensusResultURL=" + parameters.sendCensusResultURL;
+      "&sendCensusResultURL=" + parameters.sendCensusResultURL +
+      "&token=" + (new Date()).time;
 
     if ((parameters.enableGZip == null) || (parameters.enableGZip != "false")) // parameters are always strings = lame
     {
@@ -82,7 +83,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 	    requestTime = now - startRequestTime;
 
       startParseTime = new Date().time;
-      var ba:ByteArray = (event.currentTarget.data as ByteArray);      
+    
+      var ba:ByteArray = (event.currentTarget.data as ByteArray);          
       var packet:AMFPacket = AMFDecoder.decodeResponse(ba);
       parseTime = new Date().time - startParseTime;
       

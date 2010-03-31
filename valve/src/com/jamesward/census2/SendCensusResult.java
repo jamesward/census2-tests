@@ -13,7 +13,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 public class SendCensusResult
 {
-  public static void sendResult(String sendCensusResultURL, String clientId, String testId, String resultType, long resultData, Boolean gzip, Integer numRows) throws ClientProtocolException, IOException
+  public static void sendResult(String sendCensusResultURL, String clientId, String testId, String resultType, long resultData, Boolean gzip, Integer numRows, String ipAddress) throws ClientProtocolException, IOException
   {
     DefaultHttpClient httpclient = new DefaultHttpClient();
     
@@ -24,6 +24,7 @@ public class SendCensusResult
     qparams.add(new BasicNameValuePair("resultData", (new Long(resultData)).toString()));
     qparams.add(new BasicNameValuePair("gzip", gzip.toString()));
     qparams.add(new BasicNameValuePair("numRows", numRows.toString()));
+    qparams.add(new BasicNameValuePair("ipAddress", ipAddress));
 
     HttpGet httpget = new HttpGet(sendCensusResultURL + "?" + URLEncodedUtils.format(qparams, "UTF-8"));
     

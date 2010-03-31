@@ -30,6 +30,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
   
   var numRows = qs.get("numRows");
   var gzip = qs.get("enableGZip", false);
+  if (gzip == "false")
+  {
+	  gzip = false;
+  }
 
   var req;
   var selectedIndex;

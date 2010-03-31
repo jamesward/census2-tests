@@ -85,24 +85,24 @@ public class CensusServiceServlet extends HttpServlet
       rows = Integer.parseInt(request.getParameter("rows"));
     }
     
-    String sendCensusResultURL = request.getParameter("sendCensusResultURL");
-    String clientId = request.getParameter("clientId");
-    String testId = request.getParameter("testId");
-    Boolean gzip = false;
+    //String sendCensusResultURL = request.getParameter("sendCensusResultURL");
+    //String clientId = request.getParameter("clientId");
+    //String testId = request.getParameter("testId");
+    //Boolean gzip = false;
     
-    if ((request.getParameter("gzip") != null) && (request.getParameter("gzip").equals("true")))
-    {
-      gzip = true;
-    }
+    //if ((request.getParameter("gzip") != null) && (request.getParameter("gzip").equals("true")))
+    //{
+    //  gzip = true;
+    //}
     
-    long startTime = System.currentTimeMillis();
+    //long startTime = System.currentTimeMillis();
 
     CensusService srv = new CensusService();
     CensusEntryVO[] list = srv.getElements(0, rows);
     
     //SendCensusResult.sendResult(sendCensusResultURL, clientId, testId, "dataFetchTime", (System.currentTimeMillis() - startTime), gzip, rows);
     
-    startTime = System.currentTimeMillis();
+    //startTime = System.currentTimeMillis();
 
     if (command.equals("getHTML"))
     {

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2007 James Ward
+http://www.jamesward.org
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-->
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+               xmlns:s="library://ns.adobe.com/flex/spark" 
+               xmlns:mx="library://ns.adobe.com/flex/mx"
+               styleName="plain" name="flex_amf3_paged">
+
+  
+  <fx:Script>
+    <![CDATA[
+    import com.jamesward.census2.amf.*;
+    
+    import mx.controls.Alert;
+    import mx.utils.URLUtil;
+    
+    private var startRequestTime:Number;
+    private var startParseTime:Number;
+    private var startRenderTime:Number;
+    
+    private var requestTime:Number;
+    private var parseTime:Number;
+    private var renderTime:Number;
+    private var enableGZip:Boolean = false;
+
+      
+    public function pendingFunction(i:int, obj:Object):Object{
+      return {value: "item " + i.toString() + " pending"};
+    }
+    
+    public function errorFunction(i:int, obj:Object):Object{
+      return {value: "item " + i.toString() + " failed"};
+    }
+      
+    public function doFault(e:* = null):void{
+      //trace("DataService fault");
+    }
+
+
+    
+    private function sendResults():void
+    {
+      var results:Object = {requestTime: requestTime, parseTime: parseTime, renderTime: renderTime, memorySize: System.totalMemory};
+      for (var k:String in results)
+      {
+        var r:URLRequest = new URLRequest(parameters.sendCensusResultURL);
+        var p:URLVariables = new URLVariables();
+        p.clientId = parameters.clientId;
+        p.testId = name;
+        p.resultType = k;
+        p.resultData = results[k];
+        p.gzip = enableGZip;
+        p.numRows = parameters.numRows;
+        r.data = p;
+        var l:URLLoader = new URLLoader();
+        l.load(r);
+      }
+    }
+  ]]>
+  </fx:Script>
+  
+  <s:applicationComplete>
+    <![CDATA[
+    var amfURL:String = URLUtil.getProtocol(url) +
+    "://" +
+    URLUtil.getServerNameWithPort(url) +
+    "/census2-tests/servlet/CensusServiceServlet?command=getAMF3" + 
+    "&rows=" + parameters.numRows +
+    "&clientId=" + parameters.clientId +
+    "&testId=" + name +
+    "&sendCensusResultURL=" + parameters.sendCensusResultURL +
+    "&token=" + (new Date()).time;
+    
+    if ((parameters.enableGZip == null) || (parameters.enableGZip != "false")) // parameters are always strings = lame
+    {
+    enableGZip = true;
+    amfURL += "&gzip=true";
+    }
+    
+    var urlReq:URLRequest = new URLRequest(amfURL);
+    
+    var loader:URLLoader = new URLLoader();
+    
+    loader.dataFormat = URLLoaderDataFormat.BINARY;
+    
+    loader.addEventListener(Event.COMPLETE, function(event:Event):void {
+    var now:Number = new Date().time;
+    requestTime = now - startRequestTime;
+    
+    startParseTime = new Date().time;
+    
+    var ba:ByteArray = (event.currentTarget.data as ByteArray);          
+    var packet:AMFPacket = AMFDecoder.decodeResponse(ba);
+    parseTime = new Date().time - startParseTime;
+    
+    renderTime = 0;
+    startRenderTime = (new Date()).time;
+    lcv.addAll(packet.messages[0].body);
+    });
+    
+    startRequestTime = (new Date()).time;
+    loader.load(urlReq);
+    ]]>
+  </s:applicationComplete>
+  
+  <fx:Declarations>
+      <mx:AsyncListView id="asyncListView" createFailedItemFunction="errorFunction" createPendingItemFunction="pendingFunction">
+        <mx:list>
+          <mx:ListCollectionView id="lcv"/>
+        </mx:list>
+      </mx:AsyncListView>
+  </fx:Declarations>
+  
+  <mx:DataGrid id="dg" width="100%" height="100%" dataProvider="{asyncListView}">
+    <mx:updateComplete>
+      /*
+      var now:Number = new Date().time;
+      
+      if (renderTime == 0)
+      {
+      renderTime = now - startRenderTime;
+      
+      sendResults();
+      }
+      */
+    </mx:updateComplete>
+    <mx:columns>
+      <mx:DataGridColumn dataField="id"/>
+      <mx:DataGridColumn dataField="age"/>
+      <mx:DataGridColumn dataField="classOfWorker"/>
+      <mx:DataGridColumn dataField="education"/>
+      <mx:DataGridColumn dataField="maritalStatus"/>
+      <mx:DataGridColumn dataField="race"/>
+      <mx:DataGridColumn dataField="sex"/>
+    </mx:columns>
+  </mx:DataGrid>
+  
+</s:Application>

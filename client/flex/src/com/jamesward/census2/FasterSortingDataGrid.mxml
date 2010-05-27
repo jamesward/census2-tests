@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:DataGrid xmlns:mx="http://www.adobe.com/2006/mxml">
+  
+  <mx:Script>
+    import mx.collections.Sort;
+    import mx.collections.SortField;
+    import mx.core.mx_internal;
+    
+    use namespace mx_internal;
+    
+    private var descending:Boolean = false;
+    
+    public var idFieldName:String = "id";
+  </mx:Script>
+  
+  <mx:headerRelease>
+    <![CDATA[
+    if (event.dataField != idFieldName)
+    {
+      if (sortIndex == event.columnIndex)
+      {
+        descending = !descending;
+      }
+      
+      var booleanSort:Sort = new Sort();
+      
+      booleanSort.fields = [new SortField(event.dataField, false, descending), new SortField(idFieldName)];
+      dataProvider.sort = booleanSort;
+      dataProvider.refresh();
+      sortIndex = event.columnIndex;
+      sortDirection = descending ? "DESC" : "ASC";
+      _placeSortArrow();
+      event.preventDefault();
+    }
+    ]]>
+  </mx:headerRelease>
+  
+</mx:DataGrid>

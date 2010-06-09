@@ -151,9 +151,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 			sendResult("parseTime", endParseTime.getTime() - startParseTime.getTime());
 			
 			sendResult("renderTime", endRenderTime.getTime() - startRenderTime.getTime());
-			
-      
-	    setTimeout("document.getElementById('results').innerHTML = '';",200);
   }
   
 	function sendResult(resultType, resultData)
@@ -162,8 +159,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		  "?clientId=" + qs.get("clientId") + "&testId=" + testId + "&resultType=" + resultType + "&resultData=" + resultData +
 		  "&gzip=" + gzip + "&numRows=" + numRows + 
 		  "'></iframe>";
-			
-		document.getElementById("results").innerHTML = r;
+
+	  document.getElementById(resultType + "Results").innerHTML = r;
   }
 
   function listMouseOver(row)
@@ -180,9 +177,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 </script>
 </head>
 <body onload="loadData()">
-<div id="results">
-</div>
 <div id="grid" style="overflow: auto">
+</div>
+<div style="float: none; display: none; width: 100%; height: 10px">
+      <div id="memorySizeResults"></div>
+      <div id="requestTimeResults"></div>
+      <div id="parseTimeResults"></div>
+      <div id="renderTimeResults"></div>
 </div>
 </body>
 </html>

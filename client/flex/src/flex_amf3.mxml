@@ -21,6 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
   
   <mx:Script>
     import com.jamesward.census2.amf.*;
+    import com.jamesward.census2.shared.CensusEntryVO;
     
     import mx.controls.Alert;
     import mx.utils.URLUtil;
@@ -33,6 +34,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
     private var parseTime:Number;
     private var renderTime:Number;
     private var enableGZip:Boolean = false;
+    
+    private var censusEntryVO:CensusEntryVO = new CensusEntryVO();
     
     private function sendResults():void
     {

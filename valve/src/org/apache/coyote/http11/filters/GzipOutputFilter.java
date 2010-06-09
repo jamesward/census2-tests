@@ -41,6 +41,7 @@ public class GzipOutputFilter implements OutputFilter {
     protected static final String ENCODING_NAME = "gzip";
     protected static final ByteChunk ENCODING = new ByteChunk();
 
+    protected long bytesWritten = 0;
 
   /**
    * Logger.
@@ -154,6 +155,7 @@ public class GzipOutputFilter implements OutputFilter {
         }
         compressionStream.finish();
         compressionStream.close();
+        
         return ((OutputFilter) buffer).end();
     }
 
@@ -162,6 +164,7 @@ public class GzipOutputFilter implements OutputFilter {
      * Make the filter ready to process the next request.
      */
     public void recycle() {
+    	bytesWritten = 0;
         // Set compression stream to null
         compressionStream = null;
     }
@@ -177,7 +180,8 @@ public class GzipOutputFilter implements OutputFilter {
     
     public long getBytesWritten()
     {
-      return ((FlushableGZIPOutputStream)compressionStream).bytesWritten;
+      return bytesWritten;	
+      //return ((FlushableGZIPOutputStream)compressionStream).bytesWritten;
     }
 
 
@@ -195,11 +199,13 @@ public class GzipOutputFilter implements OutputFilter {
             singleByteBuffer[0] = (byte) (b & 0xff);
             outputChunk.setBytes(singleByteBuffer, 0, 1);
             buffer.doWrite(outputChunk, null);
+            bytesWritten++;
         }
         public void write(byte[] b, int off, int len)
             throws IOException {
             outputChunk.setBytes(b, off, len);
             buffer.doWrite(outputChunk, null);
+            bytesWritten += len;
         }
         public void flush() throws IOException {}
         public void close() throws IOException {}

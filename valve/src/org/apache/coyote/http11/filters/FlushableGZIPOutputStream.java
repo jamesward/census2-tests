@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public class FlushableGZIPOutputStream extends GZIPOutputStream
 {
-  public long bytesWritten = 0;
+  //public long bytesWritten = 0;
 
   public FlushableGZIPOutputStream(OutputStream os) throws IOException
   {
@@ -88,7 +88,7 @@ public class FlushableGZIPOutputStream extends GZIPOutputStream
     {
       len = def.deflate(buf, 0, buf.length);
 
-      bytesWritten += len;
+      //bytesWritten += len;
 
       if (len > 0)
       {

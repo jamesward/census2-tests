@@ -11,10 +11,29 @@
     private var descending:Boolean = false;
     
     public var idFieldName:String = "id";
+    
+    private var enableSortForColumn:String;
   </mx:Script>
+  
+  <mx:mouseDown>
+    try
+    {
+      enableSortForColumn = event.target.data.dataField;
+    }
+    catch (e:Error)
+    {
+    }
+  </mx:mouseDown>
   
   <mx:headerRelease>
     <![CDATA[
+    if (event.dataField != enableSortForColumn)
+    {
+      enableSortForColumn = "";
+      event.preventDefault();
+      return;
+    }
+    
     if (event.dataField != idFieldName)
     {
       if (sortIndex == event.columnIndex)

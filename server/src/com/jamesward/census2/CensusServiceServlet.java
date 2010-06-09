@@ -29,6 +29,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jamesward.census2.shared.CensusEntryVO;
+
 import net.sf.json.JSONArray;
 import flex.messaging.io.MessageIOConstants;
 import flex.messaging.io.SerializationContext;

@@ -80,6 +80,10 @@ public class CensusValve extends ValveBase implements Valve
             try
             {
               contentLength = ((GzipOutputFilter)filters[i]).getBytesWritten();
+              if (contentLength == 0)
+              {
+                contentLength = response.getContentCountLong();
+              }
             }
             catch (Exception e)
             {

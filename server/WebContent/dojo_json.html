@@ -113,9 +113,6 @@ dojo.addOnLoad(function()
                 					sendResult("parseTime", endParseTime.getTime() - startParseTime.getTime());
                 			
                 					sendResult("renderTime", endRenderTime.getTime() - startRenderTime.getTime());
-                			
-                      
-                	    		setTimeout("document.getElementById('results').innerHTML = '';",200);
                         }
                         catch(e)
                         {
@@ -132,7 +129,7 @@ function sendResult(resultType, resultData)
 	  "&gzip=" + gzip + "&numRows=" + numRows + 
 	  "'></iframe>";
 		
-	document.getElementById("results").innerHTML = r;
+	document.getElementById(resultType + "Results").innerHTML = r;
  }
 </script>
 <style type="text/css">
@@ -143,8 +140,6 @@ function sendResult(resultType, resultData)
 </style>
 </head>
 <body class="tundra">
-<div id="results" style="float: none;" style="width: 100%; height: 10px">
-</div>
 <div jsId="ifrs" dojoType="dojo.data.ItemFileReadStore"></div>
 <table jsId="dGrid" dojoType="dojox.grid.DataGrid"
         style="width: 100%; height: 100%;"
@@ -161,5 +156,13 @@ function sendResult(resultType, resultData)
                 </tr>
         </thead>
 </table>
+<div id="memorySizeResults" style="float: none;" style="width: 100%; height: 10px">
+</div>
+<div id="requestTimeResults" style="float: none;" style="width: 100%; height: 10px">
+</div>
+<div id="parseTimeResults" style="float: none;" style="width: 100%; height: 10px">
+</div>
+<div id="renderTimeResults" style="float: none;" style="width: 100%; height: 10px">
+</div>
 </body>
 </html>

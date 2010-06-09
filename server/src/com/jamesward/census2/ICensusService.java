@@ -19,6 +19,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 package com.jamesward.census2;
 
+import com.jamesward.census2.shared.CensusEntryVO;
+
 
 public interface ICensusService
 {

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <actionScriptProperties mainApplicationPath="flex_xml_e4x.mxml" projectUUID="5f798ece-8eaf-4e68-b813-462d0c627f37" version="6">
-  <compiler additionalCompilerArguments="-locale en_US -default-background-color=#eaeaea -compiler.optimize=false -verbose-stacktraces=true -debug=true" autoRSLOrdering="false" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="false" htmlPlayerVersionCheck="false" includeNetmonSwc="false" outputFolderLocation="/home/jamesw/projects/census2-tests/server/WebContent" outputFolderPath="bin-debug" rootURL="http://localhost:8080/census2-tests/flex_xml_e4x.html?clientId=E5475ACD-C2D0-FB0B-022F-C4F807DDC4ED&amp;numRows=500&amp;enableGZip=true" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
+  <compiler additionalCompilerArguments="-locale en_US -default-background-color=#eaeaea" autoRSLOrdering="false" copyDependentFiles="true" flexSDK="Flex 3.5" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="false" htmlPlayerVersionCheck="false" includeNetmonSwc="false" outputFolderLocation="/home/jamesw/projects/census2-tests/server/WebContent" outputFolderPath="bin-debug" rootURL="http://localhost:8080/census2-tests/flex_xml_e4x.html?clientId=E5475ACD-C2D0-FB0B-022F-C4F807DDC4ED&amp;numRows=500&amp;enableGZip=true" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
     <compilerSourcePath/>
     <libraryPath defaultLinkType="3">
-      <libraryPathEntry kind="3" linkType="2" path="${PROJECT_FRAMEWORKS}/libs/player/9/playerglobal.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="4" path="">
         <modifiedEntries>
-          <libraryPathEntry index="4" kind="3" linkType="4" path="${PROJECT_FRAMEWORKS}/libs/rpc.swc" useDefaultLinkType="true">
+          <libraryPathEntry kind="3" linkType="4" path="${PROJECT_FRAMEWORKS}/libs/rpc.swc" useDefaultLinkType="true">
             <crossDomainRsls>
               <crossDomainRslEntry autoExtract="true" policyFileUrl="" rslUrl="rpc_3.5.0.12683.swz"/>
               <crossDomainRslEntry autoExtract="true" policyFileUrl="" rslUrl="rpc_3.5.0.12683.swf"/>

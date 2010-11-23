@@ -6,6 +6,7 @@
     <option name="OUTPUT_FILE_NAME" value="flex_amf3.swf" />
     <option name="TARGET_PLAYER_VERSION" value="9.0.124" />
     <option name="STATIC_LINK_RUNTIME_SHARED_LIBRARIES" value="false" />
+    <option name="ADDITIONAL_COMPILER_OPTIONS" value="-compiler.optimize" />
     <option name="VERSION" value="3" />
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">

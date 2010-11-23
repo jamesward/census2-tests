@@ -20,7 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" styleName="plain" name="flex_amf3" xmlns:census2="com.jamesward.census2.*">
   
   <mx:Script>
-    import com.jamesward.census2.amf.*;
+    import com.jamesward.census2.amf.AMFDecoder;
+    import com.jamesward.census2.amf.AMFPacket;
     import com.jamesward.census2.shared.CensusEntryVO;
     
     import mx.controls.Alert;
@@ -88,7 +89,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
       startParseTime = new Date().time;
     
       var ba:ByteArray = (event.currentTarget.data as ByteArray);          
-      var packet:AMFPacket = AMFDecoder.decodeResponse(ba);
+      var packet:AMFPacket = AMFDecoder.decodeResponse(ba) as AMFPacket;
       parseTime = new Date().time - startParseTime;
       
       renderTime = 0;

@@ -24,12 +24,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 <script type="text/javascript" src="dojo/dojo.js" djConfig="parseOnLoad: true"></script>
 <script type="text/javascript" src="querystring.js"></script>
 <script type="text/javascript">
-  dojo.require("dojo.data.ItemFileReadStore");
-  dojo.require("dojox.grid.DataGrid");
-  //dojo.require("dojox.grid._data.model");
-  dojo.require("dojo.parser");
-</script>
-<script type="text/javascript">
 
 var qs = new Querystring();
 
@@ -55,6 +49,7 @@ var endParseTime;
 var startRenderTime;
 var endRenderTime;
 
+dojo.require("dojo.parser");
 dojo.require("dojo.cookie");
 dojo.require("dijit.dijit");
 dojo.require("dojox.grid.DataGrid");
@@ -142,8 +137,7 @@ function sendResult(resultType, resultData)
 <body class="tundra">
 <div jsId="ifrs" dojoType="dojo.data.ItemFileReadStore"></div>
 <table jsId="dGrid" dojoType="dojox.grid.DataGrid"
-        style="width: 100%; height: 100%;"
-        width="100%" height="100%">
+        style="width: 100%; height: 100%">
         <thead>
                 <tr>
                         <th width="100%">id</th>
@@ -156,13 +150,11 @@ function sendResult(resultType, resultData)
                 </tr>
         </thead>
 </table>
-<div id="memorySizeResults" style="float: none;" style="width: 100%; height: 10px">
-</div>
-<div id="requestTimeResults" style="float: none;" style="width: 100%; height: 10px">
-</div>
-<div id="parseTimeResults" style="float: none;" style="width: 100%; height: 10px">
-</div>
-<div id="renderTimeResults" style="float: none;" style="width: 100%; height: 10px">
+<div style="float: none; display: none; width: 100%; height: 10px">
+      <div id="memorySizeResults"></div>
+      <div id="requestTimeResults"></div>
+      <div id="parseTimeResults"></div>
+      <div id="renderTimeResults"></div>
 </div>
 </body>
 </html>
